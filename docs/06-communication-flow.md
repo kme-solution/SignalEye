@@ -9,7 +9,7 @@ SignalEyes uses a one-way telemetry flow from MQTT input to local log files.
 3. `mqtt-protocol-service` receives a message on `signaleyes/{tenantId}/{siteId}/{deviceId}/telemetry`.
 4. `mqtt-protocol-service` validates the topic and extracts `tenantId`, `siteId`, and `deviceId`.
 5. `mqtt-protocol-service` creates a `RawMqttMessage` that preserves the topic, metadata, payload encoding, and raw payload.
-6. `mqtt-protocol-service` forwards the raw message to the Device Gateway Service through the internal transport abstraction. The first implementation should use a local/in-memory placeholder.
+6. `mqtt-protocol-service` forwards the raw message to the Device Gateway Service through the RabbitMQ-backed transport abstraction.
 7. `device-gateway-service` receives and validates the raw message.
 8. `device-gateway-service` decodes JSON telemetry under `m`, looks up mapped nodes in `config/modbus/edge-EN.csv`, and creates a `CanonicalDeviceEvent`.
 9. `device-gateway-service` writes received telemetry, processed telemetry, and operational records to JSON-lines log files.

@@ -9,6 +9,12 @@ dotnet restore
 dotnet build
 ```
 
+## Local Test
+
+```bash
+dotnet test
+```
+
 ## Local Run
 
 Run each worker in a separate terminal:
@@ -29,7 +35,7 @@ The Modbus mapping runtime source is expected at:
 config/modbus/edge-EN.csv
 ```
 
-The current repository includes the folder marker only. Add `edge-EN.csv` before implementing or running Modbus-aware gateway mapping. This file should contain only the M2000 nodes SignalEyes retrieves.
+The repository includes `edge-EN.csv` as the active node subset. This file should contain only the M2000 nodes SignalEyes retrieves.
 
 ## Package Source
 
@@ -47,7 +53,7 @@ The script creates a timestamped archive under `_handover/` and excludes build o
 
 - One runtime process for `mqtt-protocol-service`.
 - One runtime process for `device-gateway-service`.
-- External MQTT broker and message transport configuration supplied through environment or mounted config.
+- External MQTT broker and RabbitMQ configuration supplied through environment or mounted config.
 - Log directory mounted as a persistent volume when logs must survive container replacement.
 
 ## systemd Deployment Notes

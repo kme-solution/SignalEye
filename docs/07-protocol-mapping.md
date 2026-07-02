@@ -57,7 +57,7 @@ Reference `RawMqttMessage` fields:
 | `payload` | UTF-8 payload text or base64-encoded binary payload. |
 | `metadata` | Transport metadata such as client ID, broker host, broker port, and TLS flag. |
 
-The POC published these raw messages to RabbitMQ exchange `signaleyes.raw-mqtt`. The current SignalEyes implementation should first use the internal transport abstraction with a local/in-memory placeholder. RabbitMQ can be introduced later behind the same abstraction if needed.
+SignalEyes publishes raw MQTT messages through RabbitMQ exchange `signaleyes.raw-mqtt` behind the transport abstraction.
 
 ## M2000 Modbus Mapping Rules
 

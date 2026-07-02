@@ -13,7 +13,7 @@
 | Validate topic | Require the expected topic structure before forwarding telemetry. |
 | Extract identifiers | Parse `tenantId`, `siteId`, and `deviceId` from the topic. |
 | Create raw MQTT message | Build `RawMqttMessage` with broker metadata, topic, QoS, retained flag, receive timestamp, payload encoding, and payload. |
-| Forward to device gateway | Publish or enqueue the raw message through the internal transport abstraction. The first implementation should use a local/in-memory placeholder. |
+| Forward to device gateway | Publish the raw message through the RabbitMQ-backed internal transport abstraction. |
 | Write operational logs | Record connection, subscription, receive, forward, and validation errors. |
 
 ## Non-Responsibilities

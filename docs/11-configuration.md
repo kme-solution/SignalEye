@@ -20,13 +20,16 @@ Configuration should be explicit, environment-friendly, and free of secrets. The
 
 | Key | Sample value | Description |
 |---|---|---|
-| `MessageTransport:Type` | `Internal` | Internal transport implementation name. |
-| `MessageTransport:Mode` | `InMemory` | First implementation mode for local/raw-message forwarding. |
-| `RabbitMq:Host` | `localhost` | Future RabbitMQ host when RabbitMQ is introduced behind the abstraction. |
-| `RabbitMq:RawMqttExchange` | `signaleyes.raw-mqtt` | Future exchange for raw MQTT messages if RabbitMQ is introduced. |
-| `RabbitMq:TelemetryQueue` | `signaleyes.telemetry.device-gateway` | Future queue consumed by `device-gateway-service`. |
+| `MessageTransport:Type` | `RabbitMq` | Internal transport implementation name. |
+| `RabbitMq:Host` | `localhost` | RabbitMQ host. |
+| `RabbitMq:Port` | `5672` | RabbitMQ port. |
+| `RabbitMq:Username` | `guest` | Optional RabbitMQ username. |
+| `RabbitMq:Password` | omitted | Optional RabbitMQ password; do not commit real values. |
+| `RabbitMq:RawMqttExchange` | `signaleyes.raw-mqtt` | Exchange used for raw MQTT messages. |
+| `RabbitMq:RawMqttQueue` | `signaleyes.raw-mqtt.device-gateway` | Queue consumed by `device-gateway-service`. |
+| `RabbitMq:RoutingKey` | `raw-mqtt` | Routing key bound between exchange and queue. |
 
-Use the internal message transport abstraction first with a local/in-memory placeholder. Do not make RabbitMQ required in the current phase.
+Use RabbitMQ behind the internal message transport abstraction for service-to-service raw-message delivery.
 
 ## Logging
 
@@ -60,13 +63,16 @@ Use the internal message transport abstraction first with a local/in-memory plac
     "ReconnectBackoffSeconds": 5
   },
   "MessageTransport": {
-    "Type": "Internal",
-    "Mode": "InMemory"
+    "Type": "RabbitMq"
   },
   "RabbitMq": {
     "Host": "localhost",
+    "Port": 5672,
+    "Username": "",
+    "Password": "",
     "RawMqttExchange": "signaleyes.raw-mqtt",
-    "TelemetryQueue": "signaleyes.telemetry.device-gateway"
+    "RawMqttQueue": "signaleyes.raw-mqtt.device-gateway",
+    "RoutingKey": "raw-mqtt"
   },
   "TelemetryLogging": {
     "Directory": "logs"
