@@ -21,6 +21,16 @@ dotnet run --project services/mqtt-protocol-service
 dotnet run --project services/device-gateway-service
 ```
 
+## Runtime Configuration Files
+
+The Modbus mapping runtime source is expected at:
+
+```text
+config/modbus/edge-EN.csv
+```
+
+The current repository includes the folder marker only. Add `edge-EN.csv` before implementing or running Modbus-aware gateway mapping. This file should contain only the M2000 nodes SignalEyes retrieves.
+
 ## Package Source
 
 The repository includes a source packaging script:

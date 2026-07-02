@@ -10,17 +10,23 @@ Configuration should be explicit, environment-friendly, and free of secrets. The
 | `Mqtt:Port` | `1883` | MQTT broker port. |
 | `Mqtt:ClientId` | `signaleyes-mqtt-protocol-service` | MQTT client identifier. |
 | `Mqtt:TelemetryTopic` | `signaleyes/+/+/+/telemetry` | Subscription filter for telemetry topics. |
+| `Mqtt:Username` | `signaleyes-edge` | Optional MQTT username. |
+| `Mqtt:Password` | omitted | Optional MQTT password; do not commit real values. |
+| `Mqtt:TlsEnabled` | `false` | Enables TLS for broker connection when supported. |
+| `Mqtt:QoS` | `1` | Requested MQTT subscription QoS. |
+| `Mqtt:ReconnectBackoffSeconds` | `5` | Delay before reconnect attempts. |
 
 ## Message Transport
 
 | Key | Sample value | Description |
 |---|---|---|
-| `MessageTransport:Type` | `RabbitMq` | Internal transport implementation name. |
-| `RabbitMq:Host` | `localhost` | RabbitMQ host when RabbitMQ is used. |
-| `RabbitMq:TelemetryExchange` | `signaleyes.telemetry` | Exchange for telemetry envelopes. |
-| `RabbitMq:TelemetryQueue` | `signaleyes.telemetry.device-gateway` | Queue consumed by `device-gateway-service`. |
+| `MessageTransport:Type` | `Internal` | Internal transport implementation name. |
+| `MessageTransport:Mode` | `InMemory` | First implementation mode for local/raw-message forwarding. |
+| `RabbitMq:Host` | `localhost` | Future RabbitMQ host when RabbitMQ is introduced behind the abstraction. |
+| `RabbitMq:RawMqttExchange` | `signaleyes.raw-mqtt` | Future exchange for raw MQTT messages if RabbitMQ is introduced. |
+| `RabbitMq:TelemetryQueue` | `signaleyes.telemetry.device-gateway` | Future queue consumed by `device-gateway-service`. |
 
-If RabbitMQ is not used, keep the same service contract behind an internal message queue abstraction.
+Use the internal message transport abstraction first with a local/in-memory placeholder. Do not make RabbitMQ required in the current phase.
 
 ## Logging
 
@@ -28,6 +34,12 @@ If RabbitMQ is not used, keep the same service contract behind an internal messa
 |---|---|---|
 | `TelemetryLogging:Directory` | `logs` | Root directory for JSON-lines telemetry logs. |
 | `Service:Name` | `mqtt-protocol-service` | Service name included in operational logs. |
+
+## Modbus Mapping
+
+| Key | Sample value | Description |
+|---|---|---|
+| `Gateway:Modbus:MappingPath` | `config/modbus/edge-EN.csv` | Runtime CSV mapping source containing the active M2000 node subset to retrieve and map. |
 
 ## Sample Configuration
 
@@ -40,18 +52,29 @@ If RabbitMQ is not used, keep the same service contract behind an internal messa
     "Host": "localhost",
     "Port": 1883,
     "ClientId": "signaleyes-mqtt-protocol-service",
-    "TelemetryTopic": "signaleyes/+/+/+/telemetry"
+    "TelemetryTopic": "signaleyes/+/+/+/telemetry",
+    "Username": "signaleyes-edge",
+    "Password": "",
+    "TlsEnabled": false,
+    "QoS": 1,
+    "ReconnectBackoffSeconds": 5
   },
   "MessageTransport": {
-    "Type": "RabbitMq"
+    "Type": "Internal",
+    "Mode": "InMemory"
   },
   "RabbitMq": {
     "Host": "localhost",
-    "TelemetryExchange": "signaleyes.telemetry",
+    "RawMqttExchange": "signaleyes.raw-mqtt",
     "TelemetryQueue": "signaleyes.telemetry.device-gateway"
   },
   "TelemetryLogging": {
     "Directory": "logs"
+  },
+  "Gateway": {
+    "Modbus": {
+      "MappingPath": "config/modbus/edge-EN.csv"
+    }
   }
 }
 ```

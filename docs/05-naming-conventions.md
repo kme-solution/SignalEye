@@ -34,7 +34,8 @@ Consistent naming keeps service ownership and telemetry routing clear.
 
 | Item | Convention | Example |
 |---|---|---|
-| Envelope type | PascalCase C# type | `TelemetryMessage` |
+| Raw MQTT message type | PascalCase C# type | `RawMqttMessage` |
+| Canonical event type | PascalCase C# type | `CanonicalDeviceEvent` |
 | JSON field names | camelCase when serialized for transport/logging | `deviceId`, `receivedAt`, `rawPayload` |
 | Payload type value | kebab-case | `m2000-input-registers` |
 

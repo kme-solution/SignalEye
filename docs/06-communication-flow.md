@@ -8,10 +8,10 @@ SignalEyes uses a one-way telemetry flow from MQTT input to local log files.
 2. A PUSR M100 or similar MQTT gateway publishes the telemetry payload to the MQTT broker.
 3. `mqtt-protocol-service` receives a message on `signaleyes/{tenantId}/{siteId}/{deviceId}/telemetry`.
 4. `mqtt-protocol-service` validates the topic and extracts `tenantId`, `siteId`, and `deviceId`.
-5. `mqtt-protocol-service` creates an internal telemetry envelope that preserves the raw payload.
-6. `mqtt-protocol-service` forwards the envelope to the Device Gateway Service through the configured message transport.
-7. `device-gateway-service` receives and validates the envelope.
-8. `device-gateway-service` identifies supported M2000/Modbus input-register telemetry when applicable.
+5. `mqtt-protocol-service` creates a `RawMqttMessage` that preserves the topic, metadata, payload encoding, and raw payload.
+6. `mqtt-protocol-service` forwards the raw message to the Device Gateway Service through the internal transport abstraction. The first implementation should use a local/in-memory placeholder.
+7. `device-gateway-service` receives and validates the raw message.
+8. `device-gateway-service` decodes JSON telemetry under `m`, looks up mapped nodes in `config/modbus/edge-EN.csv`, and creates a `CanonicalDeviceEvent`.
 9. `device-gateway-service` writes received telemetry, processed telemetry, and operational records to JSON-lines log files.
 
 ## Failure Handling Flow
@@ -21,7 +21,7 @@ Invalid messages must be logged and skipped safely. A single bad topic, malforme
 | Failure | Expected handling |
 |---|---|
 | Invalid topic | Log the topic and reason, then skip the message. |
-| Missing required envelope field | Write a gateway error log entry, then skip processing. |
+| Missing required raw-message field | Write a gateway error log entry, then skip processing. |
 | Unsupported payload type | Preserve raw payload in received logs and skip protocol-specific parsing. |
 | Malformed M2000 register payload | Write an error log entry with context and keep the service running. |
 | Transport failure | Log operational error and retry according to the configured transport behavior. |

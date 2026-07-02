@@ -1,6 +1,6 @@
 # SignalEyes
 
-SignalEyes is a device telemetry ingestion foundation for field equipment connected through MQTT gateways. In the current phase, it focuses on receiving telemetry from MQTT devices such as PUSR M100, normalizing each raw MQTT payload into an internal telemetry envelope, forwarding that envelope to the Device Gateway Service, parsing supported M2000/Modbus input-register telemetry, and writing JSON-lines log files.
+SignalEyes is a device telemetry ingestion foundation for field equipment connected through MQTT gateways. In the current phase, it focuses on receiving telemetry from MQTT devices such as PUSR M100, converting each MQTT message into a `RawMqttMessage`, forwarding it through an internal transport abstraction, normalizing it into a `CanonicalDeviceEvent`, applying supported M2000/Modbus input-register mapping, and writing JSON-lines log files.
 
 This phase is telemetry ingestion only. It does not include a database, dashboard, API, alerting, notification delivery, remote configuration, or command sending.
 
@@ -9,8 +9,8 @@ This phase is telemetry ingestion only. It does not include a database, dashboar
 Included:
 
 - MQTT telemetry ingestion from devices such as PUSR M100.
-- Internal telemetry envelope creation and forwarding.
-- Device Gateway validation and supported M2000 input-register parsing.
+- `RawMqttMessage` creation and forwarding through an in-memory transport placeholder.
+- Device Gateway validation and `CanonicalDeviceEvent` creation with supported M2000 input-register mapping.
 - Raw, received, processed, and error log files.
 
 Excluded:
@@ -31,7 +31,7 @@ Excluded:
 | [04-service-boundaries.md](docs/04-service-boundaries.md) | Responsibilities and non-responsibilities by service. |
 | [05-naming-conventions.md](docs/05-naming-conventions.md) | Naming rules for code, config, messages, and topics. |
 | [06-communication-flow.md](docs/06-communication-flow.md) | End-to-end telemetry flow and failure handling. |
-| [07-protocol-mapping.md](docs/07-protocol-mapping.md) | MQTT topic, envelope, and M2000 mapping rules. |
+| [07-protocol-mapping.md](docs/07-protocol-mapping.md) | MQTT topic, raw/canonical contracts, and M2000 mapping rules. |
 | [08-mqtt-protocol-service.md](docs/08-mqtt-protocol-service.md) | MQTT Protocol Service contract. |
 | [09-device-gateway-service.md](docs/09-device-gateway-service.md) | Device Gateway Service contract. |
 | [10-run-build-deploy.md](docs/10-run-build-deploy.md) | Build, run, package, and deployment notes. |
@@ -43,6 +43,8 @@ Excluded:
 
 ```text
 SignalEyes/
+  config/
+    modbus/                      Runtime Modbus mapping source files.
   docs/                         Repository documentation foundation.
   services/
     mqtt-protocol-service/       Worker service for MQTT telemetry ingestion.

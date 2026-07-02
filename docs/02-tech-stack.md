@@ -8,8 +8,8 @@ SignalEyes uses a small worker-service stack for telemetry ingestion and process
 | Language | C# | Application and shared library code. |
 | Service model | Worker Services | Long-running MQTT and gateway workers. |
 | Device transport | MQTT | Telemetry input from devices such as PUSR M100. |
-| Internal transport | RabbitMQ or internal message queue abstraction | Forward normalized telemetry from `mqtt-protocol-service` to `device-gateway-service` when transport is enabled. |
-| Message format | JSON | Payload and envelope serialization. |
+| Internal transport | Internal message queue abstraction | Forward `RawMqttMessage` records from `mqtt-protocol-service` to `device-gateway-service`; use a local/in-memory placeholder first. |
+| Message format | JSON | MQTT payloads, raw messages, canonical events, and log serialization. |
 | Log format | JSON-lines | Append-only operational and telemetry logs. |
 | Deployment | Docker or systemd | Runtime deployment options when deployment assets are present. |
 
@@ -21,5 +21,5 @@ No database is part of this phase. The only persistence target is JSON-lines log
 
 | Service | Type | Purpose |
 |---|---|---|
-| `mqtt-protocol-service` | .NET Worker Service | Receives MQTT telemetry and creates internal telemetry envelopes. |
-| `device-gateway-service` | .NET Worker Service | Validates envelopes, parses supported telemetry, and writes logs. |
+| `mqtt-protocol-service` | .NET Worker Service | Receives MQTT telemetry and creates `RawMqttMessage` records. |
+| `device-gateway-service` | .NET Worker Service | Converts raw messages into `CanonicalDeviceEvent` records, maps supported telemetry, and writes logs. |
