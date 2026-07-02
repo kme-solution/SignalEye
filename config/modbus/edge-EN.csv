@@ -1,0 +1,35 @@
+Device-name,Port-number,Slave-address,Polling-interval,Mapped-address,Merge-collection,Reference,Node-name,Function-code,Register-Address,Data-type,Response-Timeout,Reporting-on-change,Variation-range,Mapped-address,Formula,Display-name,Unit
+M2000,1,1,100,N/A,OFF,0,node00,4,0,uint16,2000,OFF,,N/A,,Alarm Status Reg. 1,
+M2000,1,1,100,N/A,OFF,1,node01,4,1,uint16,2000,OFF,,N/A,,Alarm Status Reg. 2,
+M2000,1,1,100,N/A,OFF,2,node02,4,2,uint16,2000,OFF,,N/A,,Alarm Status Reg. 3,
+M2000,1,1,100,N/A,OFF,3,node03,4,3,uint16,2000,OFF,,N/A,,Alarm Status Reg. 4,
+M2000,1,1,100,N/A,OFF,4,node04,4,4,uint16,2000,OFF,,N/A,,Rectifier Alarm Status,
+M2000,1,1,100,N/A,OFF,5,node05,4,5,uint16,2000,OFF,,N/A,,Rectifier Communication Status,
+M2000,1,1,100,N/A,OFF,6,node06,4,6,uint16,2000,OFF,,N/A,,Solar Alarm Status,
+M2000,1,1,100,N/A,OFF,7,node07,4,7,uint16,2000,OFF,,N/A,,Solar Communication Status,
+M2000,1,1,100,N/A,OFF,8,node08,4,8,uint16,2000,OFF,,N/A,/10,Rectifier Bus Voltage,Volt
+M2000,1,1,100,N/A,OFF,9,node09,4,9,int16,2000,OFF,,N/A,,System Current,Amp
+M2000,1,1,100,N/A,OFF,10,node10,4,10,uint16,2000,OFF,,N/A,/10,Load Voltage,Volt
+M2000,1,1,100,N/A,OFF,11,node11,4,11,int16,2000,OFF,,N/A,/10,Load Current,Amp
+M2000,1,1,100,N/A,OFF,12,node12,4,12,uint16,2000,OFF,,N/A,/10,Battery 1 Voltage,Volt
+M2000,1,1,100,N/A,OFF,13,node13,4,13,int16,2000,OFF,,N/A,/10,Battery 1 Current,Amp
+M2000,1,1,100,N/A,OFF,14,node14,4,14,uint16,2000,OFF,,N/A,/10,Battery 1 Remaining AH %,%
+M2000,1,1,100,N/A,OFF,15,node15,4,15,uint16,2000,OFF,,N/A,/10,Battery 2 Voltage,Volt
+M2000,1,1,100,N/A,OFF,16,node16,4,16,int16,2000,OFF,,N/A,/10,Battery 2 Current,Amp
+M2000,1,1,100,N/A,OFF,17,node17,4,17,uint16,2000,OFF,,N/A,/10,Battery 2 Remaining AH %,%
+M2000,1,1,100,N/A,OFF,18,node18,4,18,uint16,2000,OFF,,N/A,,Line 1 Voltage,Volt
+M2000,1,1,100,N/A,OFF,19,node19,4,19,uint16,2000,OFF,,N/A,,Line 2 Voltage,Volt
+M2000,1,1,100,N/A,OFF,20,node20,4,20,uint16,2000,OFF,,N/A,,Line 3 Voltage,Volt
+M2000,1,1,100,N/A,OFF,21,node21,4,21,uint16,2000,OFF,,N/A,/10,Battery Temperature,C
+M2000,1,1,100,N/A,OFF,81,node81,4,81,uint32(ABCD),2000,OFF,,N/A,,Operator Power[1],Watt
+M2000,1,1,100,N/A,OFF,83,node83,4,83,uint32(ABCD),2000,OFF,,N/A,,Operator Cumulative Power[1],Watt
+M2000,1,1,100,N/A,OFF,85,node85,4,85,uint32(ABCD),2000,OFF,,N/A,,Battery Charge Counter,
+M2000,1,1,100,N/A,OFF,87,node87,4,87,uint32(ABCD),2000,OFF,,N/A,,Battery Discharge Counter,
+M2000,1,1,100,N/A,OFF,89,node89,4,89,uint32(ABCD),2000,OFF,,N/A,/10,Battery Cumulative Charge Time,Hour
+M2000,1,1,100,N/A,OFF,91,node91,4,91,uint32(ABCD),2000,OFF,,N/A,/10,Battery Cumulative Discharge Time,Hour
+M2000,1,1,100,N/A,OFF,93,node93,4,93,uint32(ABCD),2000,OFF,,N/A,/10,Battery Cumulative Charge Power,KWH
+M2000,1,1,100,N/A,OFF,95,node95,4,95,uint32(ABCD),2000,OFF,,N/A,/10,Battery Cumulative Discharge Power,KWH
+M2000,1,1,100,N/A,OFF,97,node97,4,97,uint32(ABCD),2000,OFF,,N/A,/10,Battery Cumulative Discharge AH,KAH
+M2000,1,1,100,N/A,OFF,99,node99,4,99,uint32(ABCD),2000,OFF,,N/A,/10,Total Solar Cumulative Time,Hour
+M2000,1,1,100,N/A,OFF,101,node101,4,101,uint32(ABCD),2000,OFF,,N/A,/10,Total Solar Cumulative Power,KWH
+M2000,1,1,100,N/A,OFF,102,node102,4,102,uint32(ABCD),2000,OFF,,N/A,/10,Total Solar Cumulative Power Low Word,KWH
