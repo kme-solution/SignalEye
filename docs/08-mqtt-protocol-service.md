@@ -6,15 +6,15 @@
 
 | Feature | Description |
 |---|---|
-| Connect to MQTT broker | Establish and maintain an MQTT client connection using configured broker settings. |
-| Subscribe to telemetry topic | Subscribe to `signaleye/{tenantId}/{siteId}/{deviceId}/telemetry`. |
+| Host MQTT broker | Start an MQTTnet server on the configured TCP port and accept device connections. |
+| Receive telemetry publish | Intercept publishes sent to `signaleye/{tenantId}/{siteId}/{deviceId}/telemetry`. |
 | Receive raw payload | Read payload bytes/text from MQTT messages without losing original content. |
 | Detect payload encoding | Store valid UTF-8 payloads as text and binary/non-UTF-8 payloads as base64. |
 | Validate topic | Require the expected topic structure before forwarding telemetry. |
 | Extract identifiers | Parse `tenantId`, `siteId`, and `deviceId` from the topic. |
 | Create raw MQTT message | Build `RawMqttMessage` with broker metadata, topic, QoS, retained flag, receive timestamp, payload encoding, and payload. |
 | Forward to device gateway | Publish the raw message through the RabbitMQ-backed internal transport abstraction. |
-| Write operational logs | Record connection, subscription, receive, forward, and validation errors. |
+| Write operational logs | Record server startup, rejected connections, receive, forward, and validation errors. |
 
 ## Non-Responsibilities
 
@@ -31,5 +31,5 @@
 
 - Invalid topics should be logged and skipped safely.
 - Raw payloads must be preserved in `RawMqttMessage`.
-- MQTT reconnect and transport retry behavior should be observable through structured logs.
-- POC behavior supports broker host, port, client ID, username/password, TLS flag, topic filters, QoS, and reconnect backoff; keep those as reference requirements for the production adapter.
+- MQTT server and transport failures should be observable through structured logs.
+- The server supports an optional configured username and password. Add TLS and durable MQTT session persistence before exposing it to untrusted networks.

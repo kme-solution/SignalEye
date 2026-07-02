@@ -2,19 +2,13 @@
 
 Configuration should be explicit, environment-friendly, and free of secrets. The values below are samples only.
 
-## MQTT Broker
+## MQTT Server
 
 | Key | Sample value | Description |
 |---|---|---|
-| `Mqtt:Host` | `localhost` | MQTT broker host. |
-| `Mqtt:Port` | `1883` | MQTT broker port. |
-| `Mqtt:ClientId` | `signaleye-mqtt-protocol-service` | MQTT client identifier. |
-| `Mqtt:TelemetryTopic` | `signaleye/+/+/+/telemetry` | Subscription filter for telemetry topics. |
-| `Mqtt:Username` | `signaleye-edge` | Optional MQTT username. |
-| `Mqtt:Password` | omitted | Optional MQTT password; do not commit real values. |
-| `Mqtt:TlsEnabled` | `false` | Enables TLS for broker connection when supported. |
-| `Mqtt:QoS` | `1` | Requested MQTT subscription QoS. |
-| `Mqtt:ReconnectBackoffSeconds` | `5` | Delay before reconnect attempts. |
+| `Mqtt:Port` | `1883` | TCP port exposed by the embedded MQTTnet server. |
+| `Mqtt:Username` | `signaleye-device` | Optional device username. Blank allows anonymous connections. |
+| `Mqtt:Password` | omitted | Device password; supply it through an environment variable. |
 
 ## Message Transport
 
@@ -52,15 +46,9 @@ Use RabbitMQ behind the internal message transport abstraction for service-to-se
     "Name": "mqtt-protocol-service"
   },
   "Mqtt": {
-    "Host": "localhost",
     "Port": 1883,
-    "ClientId": "signaleye-mqtt-protocol-service",
-    "TelemetryTopic": "signaleye/+/+/+/telemetry",
-    "Username": "signaleye-edge",
-    "Password": "",
-    "TlsEnabled": false,
-    "QoS": 1,
-    "ReconnectBackoffSeconds": 5
+    "Username": "signaleye-device",
+    "Password": ""
   },
   "MessageTransport": {
     "Type": "RabbitMq"

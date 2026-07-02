@@ -1,0 +1,13 @@
+.git
+.gitignore
+.vs
+.vscode
+.idea
+**/bin
+**/obj
+logs
+TestResults
+_handover
+*.user
+*.suo
+*.log

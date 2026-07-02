@@ -55,6 +55,8 @@ SignalEye/
     SignalEye.Modbus/           M2000 input-register parsing.
     SignalEye.Infrastructure/   Shared logging, messaging, and hosting helpers.
   tests/                         Test projects for parsing, validation, and service behavior.
+  deploy/
+    docker/                      Docker Compose server deployment assets.
 ```
 
 ## Build

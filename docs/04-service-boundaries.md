@@ -6,7 +6,7 @@ SignalEye keeps protocol ingestion and gateway processing separate so each servi
 
 | Service | Responsibilities |
 |---|---|
-| `mqtt-protocol-service` | Connect to the MQTT broker, subscribe to telemetry topics, receive raw payloads, validate topic structure, extract `tenantId`, `siteId`, and `deviceId`, create `RawMqttMessage` records, forward raw messages to the gateway transport abstraction, and write operational logs. |
+| `mqtt-protocol-service` | Host the MQTTnet server, accept device connections and publishes, validate topic structure, extract `tenantId`, `siteId`, and `deviceId`, create `RawMqttMessage` records, forward raw messages to the gateway transport abstraction, and write operational logs. |
 | `device-gateway-service` | Receive `RawMqttMessage` records, validate required fields, identify device and protocol type, create `CanonicalDeviceEvent` records, map supported M2000 input-register telemetry, preserve raw payloads, and write received, processed, and error logs. |
 
 ## Shared Components

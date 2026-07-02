@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Options;
 using MQTTnet;
-using MQTTnet.Client;
 using MQTTnet.Protocol;
+using MQTTnet.Server;
 using SignalEye.Infrastructure;
 using SignalEye.Telemetry;
 
@@ -30,86 +30,36 @@ public sealed class MqttProtocolWorker : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         _logger.LogInformation(
-            "MQTT protocol service starting. Broker={Host}:{Port}, Topic={Topic}",
-            _options.Host,
+            "MQTTnet server starting on port {Port}. AuthenticationRequired={AuthenticationRequired}",
             _options.Port,
-            _options.TelemetryTopic);
+            !string.IsNullOrWhiteSpace(_options.Username));
 
-        while (!stoppingToken.IsCancellationRequested)
-        {
-            try
-            {
-                await RunMqttClientAsync(stoppingToken);
-            }
-            catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
-            {
-                break;
-            }
-            catch (Exception exception)
-            {
-                _logger.LogWarning(
-                    exception,
-                    "MQTT client loop failed. Reconnecting in {DelaySeconds} seconds.",
-                    _options.ReconnectBackoffSeconds);
-                await Task.Delay(GetReconnectDelay(), stoppingToken);
-            }
-        }
-    }
-
-    private async Task RunMqttClientAsync(CancellationToken stoppingToken)
-    {
         var factory = new MqttFactory();
-        using var client = factory.CreateMqttClient();
+        var serverOptions = new MqttServerOptionsBuilder()
+            .WithDefaultEndpoint()
+            .WithDefaultEndpointPort(_options.Port)
+            .Build();
+        using var server = factory.CreateMqttServer(serverOptions);
 
-        client.ApplicationMessageReceivedAsync += async args =>
+        server.ValidatingConnectionAsync += args =>
         {
-            var topic = args.ApplicationMessage.Topic ?? string.Empty;
-            if (!MqttTopicParser.TryParseTelemetryTopic(topic, out _))
+            if (IsConnectionAllowed(args.UserName, args.Password))
             {
-                _logger.LogWarning(
-                    "Skipping MQTT message with invalid topic {Topic}. Expected {ExpectedTopic}.",
-                    topic,
-                    MqttTopicParser.TelemetryTopicPattern);
-                return;
+                return Task.CompletedTask;
             }
 
-            var payloadBytes = args.ApplicationMessage.PayloadSegment.ToArray();
-            var rawMessage = _messageFactory.Create(
-                brokerHost: _options.Host,
-                brokerPort: _options.Port,
-                clientId: _options.ClientId,
-                topic: topic,
-                qos: (int)args.ApplicationMessage.QualityOfServiceLevel,
-                retained: args.ApplicationMessage.Retain,
-                payloadBytes: payloadBytes,
-                receivedAtUtc: DateTimeOffset.UtcNow,
-                metadata: new Dictionary<string, string>
-                {
-                    ["tlsEnabled"] = _options.TlsEnabled.ToString(System.Globalization.CultureInfo.InvariantCulture)
-                });
-
-            await _publisher.PublishAsync(rawMessage, stoppingToken);
-            await _fileLogger.WriteMqttTelemetryAsync(rawMessage, stoppingToken);
-
-            _logger.LogInformation(
-                "Forwarded raw MQTT telemetry {MessageId} for {TenantId}/{SiteId}/{DeviceId}.",
-                rawMessage.MessageId,
-                rawMessage.TenantId,
-                rawMessage.SiteId,
-                rawMessage.DeviceId);
+            args.ReasonCode = MqttConnectReasonCode.BadUserNameOrPassword;
+            _logger.LogWarning("Rejected MQTT connection from client {ClientId}.", args.ClientId);
+            return Task.CompletedTask;
         };
 
-        var options = BuildClientOptions();
-        await client.ConnectAsync(options, stoppingToken);
+        server.InterceptingPublishAsync += args => ProcessPublishedMessageAsync(
+            args.ClientId,
+            args.ApplicationMessage,
+            args.CancellationToken);
 
-        var subscribeOptions = factory.CreateSubscribeOptionsBuilder()
-            .WithTopicFilter(filter => filter
-                .WithTopic(_options.TelemetryTopic)
-                .WithQualityOfServiceLevel(ToMqttQoS(_options.QoS)))
-            .Build();
-
-        await client.SubscribeAsync(subscribeOptions, stoppingToken);
-        _logger.LogInformation("MQTT protocol service subscribed to {Topic}.", _options.TelemetryTopic);
+        await server.StartAsync();
+        _logger.LogInformation("MQTTnet server listening on port {Port}.", _options.Port);
 
         try
         {
@@ -117,41 +67,53 @@ public sealed class MqttProtocolWorker : BackgroundService
         }
         finally
         {
-            if (client.IsConnected)
-            {
-                await client.DisconnectAsync(cancellationToken: CancellationToken.None);
-            }
+            await server.StopAsync();
         }
     }
 
-    private MqttClientOptions BuildClientOptions()
+    private bool IsConnectionAllowed(string? username, string? password)
     {
-        var builder = new MqttClientOptionsBuilder()
-            .WithTcpServer(_options.Host, _options.Port)
-            .WithClientId(_options.ClientId)
-            .WithCleanSession();
+        if (string.IsNullOrWhiteSpace(_options.Username)) return true;
 
-        if (!string.IsNullOrWhiteSpace(_options.Username))
-        {
-            builder = builder.WithCredentials(_options.Username, _options.Password);
-        }
-
-        if (_options.TlsEnabled)
-        {
-            builder = builder.WithTlsOptions(tls => tls.UseTls());
-        }
-
-        return builder.Build();
+        return string.Equals(username, _options.Username, StringComparison.Ordinal)
+            && string.Equals(password, _options.Password, StringComparison.Ordinal);
     }
 
-    private TimeSpan GetReconnectDelay() =>
-        TimeSpan.FromSeconds(Math.Max(1, _options.ReconnectBackoffSeconds));
-
-    private static MqttQualityOfServiceLevel ToMqttQoS(int qos) =>
-        qos switch
+    private async Task ProcessPublishedMessageAsync(
+        string clientId,
+        MqttApplicationMessage applicationMessage,
+        CancellationToken cancellationToken)
+    {
+        var topic = applicationMessage.Topic ?? string.Empty;
+        if (!MqttTopicParser.TryParseTelemetryTopic(topic, out _))
         {
-            <= 0 => MqttQualityOfServiceLevel.AtMostOnce,
-            1 => MqttQualityOfServiceLevel.AtLeastOnce,
-            _ => MqttQualityOfServiceLevel.ExactlyOnce
-        };
+            _logger.LogWarning(
+                "Skipping MQTT message with invalid topic {Topic}. Expected {ExpectedTopic}.",
+                topic,
+                MqttTopicParser.TelemetryTopicPattern);
+            return;
+        }
+
+        var rawMessage = _messageFactory.Create(
+            brokerHost: Environment.MachineName,
+            brokerPort: _options.Port,
+            clientId: clientId,
+            topic: topic,
+            qos: (int)applicationMessage.QualityOfServiceLevel,
+            retained: applicationMessage.Retain,
+            payloadBytes: applicationMessage.PayloadSegment.ToArray(),
+            receivedAtUtc: DateTimeOffset.UtcNow,
+            metadata: new Dictionary<string, string> { ["mqttServer"] = "MQTTnet" });
+
+        await _publisher.PublishAsync(rawMessage, cancellationToken);
+        await _fileLogger.WriteMqttTelemetryAsync(rawMessage, cancellationToken);
+
+        _logger.LogInformation(
+            "Forwarded raw MQTT telemetry {MessageId} for {TenantId}/{SiteId}/{DeviceId} from client {ClientId}.",
+            rawMessage.MessageId,
+            rawMessage.TenantId,
+            rawMessage.SiteId,
+            rawMessage.DeviceId,
+            clientId);
+    }
 }

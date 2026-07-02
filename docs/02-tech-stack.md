@@ -8,7 +8,7 @@ SignalEye uses a small worker-service stack for telemetry ingestion and processi
 | Language | C# | Application and shared library code. |
 | Service model | Worker Services | Long-running MQTT and gateway workers. |
 | Device transport | MQTT | Telemetry input from devices such as PUSR M100. |
-| MQTT client | MQTTnet | Broker connection, subscription, QoS, TLS, and message receive handling in `mqtt-protocol-service`. |
+| MQTT server | MQTTnet | Embedded broker, device connections, authentication, QoS, and publish handling in `mqtt-protocol-service`. |
 | Internal transport | RabbitMQ behind an internal message queue abstraction | Forward `RawMqttMessage` records from `mqtt-protocol-service` to `device-gateway-service`. |
 | Message format | JSON | MQTT payloads, raw messages, canonical events, and log serialization. |
 | Log format | JSON-lines | Append-only operational and telemetry logs. |
