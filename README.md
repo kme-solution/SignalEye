@@ -34,7 +34,7 @@ Excluded:
 | [07-protocol-mapping.md](docs/07-protocol-mapping.md) | MQTT topic, raw/canonical contracts, and M2000 mapping rules. |
 | [08-mqtt-protocol-service.md](docs/08-mqtt-protocol-service.md) | MQTT Protocol Service contract. |
 | [09-device-gateway-service.md](docs/09-device-gateway-service.md) | Device Gateway Service contract. |
-| [10-run-build-deploy.md](docs/10-run-build-deploy.md) | Build, run, package, and deployment notes. |
+| [10-run-build-deploy.md](docs/10-run-build-deploy.md) | Build, run, and deployment notes. |
 | [11-configuration.md](docs/11-configuration.md) | Configuration keys and sample values. |
 | [12-logging-standard.md](docs/12-logging-standard.md) | JSON-lines logging standard. |
 | [13-development-guidelines.md](docs/13-development-guidelines.md) | Development rules for this phase. |
@@ -55,11 +55,6 @@ SignalEye/
     SignalEye.Modbus/           M2000 input-register parsing.
     SignalEye.Infrastructure/   Shared logging, messaging, and hosting helpers.
   tests/                         Test projects for parsing, validation, and service behavior.
-  deploy/
-    docker/                      Docker deployment assets when present.
-    systemd/                     systemd deployment assets when present.
-  scripts/
-    package-source.sh            Source packaging script.
 ```
 
 ## Build

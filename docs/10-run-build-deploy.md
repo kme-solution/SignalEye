@@ -37,19 +37,9 @@ config/modbus/edge-EN.csv
 
 The repository includes `edge-EN.csv` as the active node subset. This file should contain only the M2000 nodes SignalEye retrieves.
 
-## Package Source
-
-The repository includes a source packaging script:
-
-```bash
-./scripts/package-source.sh
-```
-
-The script creates a timestamped archive under `_handover/` and excludes build output, logs, editor metadata, and git metadata.
-
 ## Docker Deployment Notes
 
-`deploy/docker/` exists for Docker deployment assets. Keep container configuration aligned with the same service boundaries:
+If Docker deployment assets are added, keep container configuration aligned with the same service boundaries:
 
 - One runtime process for `mqtt-protocol-service`.
 - One runtime process for `device-gateway-service`.
@@ -58,7 +48,7 @@ The script creates a timestamped archive under `_handover/` and excludes build o
 
 ## systemd Deployment Notes
 
-`deploy/systemd/` exists for systemd deployment assets. Each service should have a separate unit:
+If systemd deployment assets are added, each service should have a separate unit:
 
 - `signaleye-mqtt-protocol-service.service`
 - `signaleye-device-gateway-service.service`
