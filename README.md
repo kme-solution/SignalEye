@@ -1,6 +1,6 @@
-# SignalEyes
+# SignalEye
 
-SignalEyes is a device telemetry ingestion foundation for field equipment connected through MQTT gateways. In the current phase, it focuses on receiving telemetry from MQTT devices such as PUSR M100, converting each MQTT message into a `RawMqttMessage`, forwarding it through an internal transport abstraction, normalizing it into a `CanonicalDeviceEvent`, applying supported M2000/Modbus input-register mapping, and writing JSON-lines log files.
+SignalEye is a device telemetry ingestion foundation for field equipment connected through MQTT gateways. In the current phase, it focuses on receiving telemetry from MQTT devices such as PUSR M100, converting each MQTT message into a `RawMqttMessage`, forwarding it through an internal transport abstraction, normalizing it into a `CanonicalDeviceEvent`, applying supported M2000/Modbus input-register mapping, and writing JSON-lines log files.
 
 This phase is telemetry ingestion only. It does not include a database, dashboard, API, alerting, notification delivery, remote configuration, or command sending.
 
@@ -42,7 +42,7 @@ Excluded:
 ## Repository Structure
 
 ```text
-SignalEyes/
+SignalEye/
   config/
     modbus/                      Runtime Modbus mapping source files.
   docs/                         Repository documentation foundation.
@@ -50,10 +50,10 @@ SignalEyes/
     mqtt-protocol-service/       Worker service for MQTT telemetry ingestion.
     device-gateway-service/      Worker service for gateway validation, parsing, and logs.
   src/
-    SignalEyes.Contracts/        Shared telemetry DTOs and contracts.
-    SignalEyes.Telemetry/        Telemetry normalization and validation helpers.
-    SignalEyes.Modbus/           M2000 input-register parsing.
-    SignalEyes.Infrastructure/   Shared logging, messaging, and hosting helpers.
+    SignalEye.Contracts/        Shared telemetry DTOs and contracts.
+    SignalEye.Telemetry/        Telemetry normalization and validation helpers.
+    SignalEye.Modbus/           M2000 input-register parsing.
+    SignalEye.Infrastructure/   Shared logging, messaging, and hosting helpers.
   tests/                         Test projects for parsing, validation, and service behavior.
   deploy/
     docker/                      Docker deployment assets when present.

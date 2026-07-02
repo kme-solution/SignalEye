@@ -5,18 +5,18 @@ This document defines the telemetry topic, raw/canonical message contracts, and 
 ## MQTT Topic Format
 
 ```text
-signaleyes/{tenantId}/{siteId}/{deviceId}/telemetry
+signaleye/{tenantId}/{siteId}/{deviceId}/telemetry
 ```
 
 | Segment | Required | Description |
 |---|---:|---|
-| `signaleyes` | Yes | Fixed product root. |
+| `signaleye` | Yes | Fixed product root. |
 | `{tenantId}` | Yes | Tenant or customer identifier. |
 | `{siteId}` | Yes | Site or facility identifier. |
 | `{deviceId}` | Yes | Device identifier. |
 | `telemetry` | Yes | Fixed message category for telemetry ingestion. |
 
-Legacy proof-of-concept services used `devices/{deviceId}/telemetry` as the default topic filter. New SignalEyes implementation uses only the tenant/site-aware topic above.
+Legacy proof-of-concept services used `devices/{deviceId}/telemetry` as the default topic filter. New SignalEye implementation uses only the tenant/site-aware topic above.
 
 ## Service Message Contracts
 
@@ -39,7 +39,7 @@ Current code may use smaller DTOs while the transport is being built out. The ta
 
 ## Raw MQTT Envelope Reference
 
-The proof-of-concept MQTT adapter converted every MQTT message into a raw message before gateway normalization. SignalEyes should preserve that behavior while using current project names and contracts.
+The proof-of-concept MQTT adapter converted every MQTT message into a raw message before gateway normalization. SignalEye should preserve that behavior while using current project names and contracts.
 
 Reference `RawMqttMessage` fields:
 
@@ -57,13 +57,13 @@ Reference `RawMqttMessage` fields:
 | `payload` | UTF-8 payload text or base64-encoded binary payload. |
 | `metadata` | Transport metadata such as client ID, broker host, broker port, and TLS flag. |
 
-SignalEyes publishes raw MQTT messages through RabbitMQ exchange `signaleyes.raw-mqtt` behind the transport abstraction.
+SignalEye publishes raw MQTT messages through RabbitMQ exchange `signaleye.raw-mqtt` behind the transport abstraction.
 
 ## M2000 Modbus Mapping Rules
 
 M2000 supports input registers only. Holding registers are not available. Remote configuration through Modbus is not supported in this phase.
 
-The Modbus decoder uses one runtime mapping source configured at `Gateway:Modbus:MappingPath`. This CSV is the active retrieval subset: it contains only the M2000 nodes SignalEyes should read and map, not every register from the M2000 reference table.
+The Modbus decoder uses one runtime mapping source configured at `Gateway:Modbus:MappingPath`. This CSV is the active retrieval subset: it contains only the M2000 nodes SignalEye should read and map, not every register from the M2000 reference table.
 
 Default:
 
@@ -152,11 +152,11 @@ Configured M100 node mappings:
 | 101 | `node101` | 4 | 101 | `uint32(ABCD)` |
 | 102 | `node102` | 4 | 102 | `uint32(ABCD)` |
 
-This configured profile intentionally polls a subset of the full Exicom M2000 input-register map. The decoder should use `config/modbus/edge-EN.csv` as the authoritative active node list. The full register map below is reference material only; do not treat it as the list of everything SignalEyes must retrieve.
+This configured profile intentionally polls a subset of the full Exicom M2000 input-register map. The decoder should use `config/modbus/edge-EN.csv` as the authoritative active node list. The full register map below is reference material only; do not treat it as the list of everything SignalEye must retrieve.
 
 ## Reference Poller Behavior
 
-A previous proof-of-concept Modbus TCP poller exists as a behavior reference only. Do not copy that code into SignalEyes. Reimplement the behavior using SignalEyes naming, service boundaries, DTOs, structured logs, and tests.
+A previous proof-of-concept Modbus TCP poller exists as a behavior reference only. Do not copy that code into SignalEye. Reimplement the behavior using SignalEye naming, service boundaries, DTOs, structured logs, and tests.
 
 Reference behavior to preserve:
 
@@ -178,7 +178,7 @@ Reference behavior to preserve:
 Reference behavior to avoid:
 
 - Do not put low-level Modbus TCP polling directly into unrelated service orchestration code.
-- Do not expose proof-of-concept monitor bridge types in SignalEyes contracts.
+- Do not expose proof-of-concept monitor bridge types in SignalEye contracts.
 - Do not return decoded values as loosely typed strings where typed telemetry records are required.
 - Do not let one failed node or range stop the worker permanently.
 
@@ -225,7 +225,7 @@ Current proof-of-concept gateway behavior treats metric names as plain reading n
 }
 ```
 
-SignalEyes should enrich mapped Modbus nodes before creating canonical readings. Expected mapped output:
+SignalEye should enrich mapped Modbus nodes before creating canonical readings. Expected mapped output:
 
 ```json
 {
@@ -280,7 +280,7 @@ public interface IModbusValueMapper
 }
 ```
 
-These are design references, not final API requirements. Implement them in the style that best fits the current SignalEyes codebase.
+These are design references, not final API requirements. Implement them in the style that best fits the current SignalEye codebase.
 
 ## Exicom M2000 Register Reference
 

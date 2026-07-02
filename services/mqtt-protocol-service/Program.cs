@@ -1,5 +1,5 @@
-using SignalEyes.Infrastructure;
-using SignalEyes.Telemetry;
+using SignalEye.Infrastructure;
+using SignalEye.Telemetry;
 
 var builder = Host.CreateApplicationBuilder(args);
 

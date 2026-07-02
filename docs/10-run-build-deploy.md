@@ -35,7 +35,7 @@ The Modbus mapping runtime source is expected at:
 config/modbus/edge-EN.csv
 ```
 
-The repository includes `edge-EN.csv` as the active node subset. This file should contain only the M2000 nodes SignalEyes retrieves.
+The repository includes `edge-EN.csv` as the active node subset. This file should contain only the M2000 nodes SignalEye retrieves.
 
 ## Package Source
 
@@ -60,7 +60,7 @@ The script creates a timestamped archive under `_handover/` and excludes build o
 
 `deploy/systemd/` exists for systemd deployment assets. Each service should have a separate unit:
 
-- `signaleyes-mqtt-protocol-service.service`
-- `signaleyes-device-gateway-service.service`
+- `signaleye-mqtt-protocol-service.service`
+- `signaleye-device-gateway-service.service`
 
 Use systemd for process supervision, restart policy, and log forwarding. Application telemetry logs should still be written to the configured JSON-lines log directory.

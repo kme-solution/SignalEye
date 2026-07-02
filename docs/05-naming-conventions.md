@@ -6,10 +6,10 @@ Consistent naming keeps service ownership and telemetry routing clear.
 
 | Item | Convention | Example |
 |---|---|---|
-| Repository | PascalCase product name | `SignalEyes` |
+| Repository | PascalCase product name | `SignalEye` |
 | Worker service folders | kebab-case | `services/mqtt-protocol-service` |
-| Shared library folders | PascalCase .NET project name | `src/SignalEyes.Contracts` |
-| Test folders | Match project or feature under test | `tests/SignalEyes.Modbus.Tests` |
+| Shared library folders | PascalCase .NET project name | `src/SignalEye.Contracts` |
+| Test folders | Match project or feature under test | `tests/SignalEye.Modbus.Tests` |
 | Deployment folders | Lowercase by runtime target | `deploy/docker`, `deploy/systemd` |
 
 ## Services and Projects
@@ -18,7 +18,7 @@ Consistent naming keeps service ownership and telemetry routing clear.
 |---|---|---|
 | Service name | kebab-case | `mqtt-protocol-service` |
 | Project file | Match service or library folder | `device-gateway-service.csproj` |
-| C# namespace | PascalCase | `SignalEyes.Modbus` |
+| C# namespace | PascalCase | `SignalEye.Modbus` |
 | Class name | PascalCase, noun or noun phrase | `M2000InputRegisterParser` |
 | Worker class | Service role plus `Worker` | `MqttProtocolWorker` |
 
@@ -44,18 +44,18 @@ Consistent naming keeps service ownership and telemetry routing clear.
 Telemetry topics use this format:
 
 ```text
-signaleyes/{tenantId}/{siteId}/{deviceId}/telemetry
+signaleye/{tenantId}/{siteId}/{deviceId}/telemetry
 ```
 
 Example:
 
 ```text
-signaleyes/acme/site-a/m2000-001/telemetry
+signaleye/acme/site-a/m2000-001/telemetry
 ```
 
 | Segment | Meaning |
 |---|---|
-| `signaleyes` | Product topic root. |
+| `signaleye` | Product topic root. |
 | `{tenantId}` | Tenant or customer identifier. |
 | `{siteId}` | Site or facility identifier. |
 | `{deviceId}` | Device identifier. |

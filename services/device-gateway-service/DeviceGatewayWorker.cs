@@ -1,6 +1,6 @@
-using SignalEyes.Contracts;
-using SignalEyes.Infrastructure;
-using SignalEyes.Telemetry;
+using SignalEye.Contracts;
+using SignalEye.Infrastructure;
+using SignalEye.Telemetry;
 
 public sealed class DeviceGatewayWorker : BackgroundService
 {

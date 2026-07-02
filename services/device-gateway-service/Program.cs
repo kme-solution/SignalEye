@@ -1,6 +1,6 @@
-using SignalEyes.Infrastructure;
-using SignalEyes.Modbus;
-using SignalEyes.Telemetry;
+using SignalEye.Infrastructure;
+using SignalEye.Modbus;
+using SignalEye.Telemetry;
 
 var builder = Host.CreateApplicationBuilder(args);
 

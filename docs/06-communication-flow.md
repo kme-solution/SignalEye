@@ -1,12 +1,12 @@
 # Communication Flow
 
-SignalEyes uses a one-way telemetry flow from MQTT input to local log files.
+SignalEye uses a one-way telemetry flow from MQTT input to local log files.
 
 ## Success Flow
 
 1. An M2000 device exposes telemetry as Modbus input-register values.
 2. A PUSR M100 or similar MQTT gateway publishes the telemetry payload to the MQTT broker.
-3. `mqtt-protocol-service` receives a message on `signaleyes/{tenantId}/{siteId}/{deviceId}/telemetry`.
+3. `mqtt-protocol-service` receives a message on `signaleye/{tenantId}/{siteId}/{deviceId}/telemetry`.
 4. `mqtt-protocol-service` validates the topic and extracts `tenantId`, `siteId`, and `deviceId`.
 5. `mqtt-protocol-service` creates a `RawMqttMessage` that preserves the topic, metadata, payload encoding, and raw payload.
 6. `mqtt-protocol-service` forwards the raw message to the Device Gateway Service through the RabbitMQ-backed transport abstraction.

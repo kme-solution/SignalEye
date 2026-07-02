@@ -1,6 +1,6 @@
 # Tech Stack
 
-SignalEyes uses a small worker-service stack for telemetry ingestion and processing.
+SignalEye uses a small worker-service stack for telemetry ingestion and processing.
 
 | Layer | Technology | Usage |
 |---|---|---|

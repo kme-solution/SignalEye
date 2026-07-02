@@ -1,6 +1,6 @@
-# SignalEyes Overview
+# SignalEye Overview
 
-SignalEyes Device Gateway is a telemetry ingestion foundation for field devices that publish data through MQTT gateways. It receives raw MQTT telemetry, stores it as `RawMqttMessage`, normalizes it into `CanonicalDeviceEvent`, applies supported M2000/Modbus input-register mapping, and writes traceable JSON-lines log files.
+SignalEye Device Gateway is a telemetry ingestion foundation for field devices that publish data through MQTT gateways. It receives raw MQTT telemetry, stores it as `RawMqttMessage`, normalizes it into `CanonicalDeviceEvent`, applies supported M2000/Modbus input-register mapping, and writes traceable JSON-lines log files.
 
 This phase is telemetry ingestion only.
 

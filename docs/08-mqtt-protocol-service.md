@@ -1,13 +1,13 @@
 # MQTT Protocol Service
 
-`mqtt-protocol-service` owns MQTT ingestion and protocol normalization. It is the boundary between MQTT devices and the internal SignalEyes telemetry pipeline.
+`mqtt-protocol-service` owns MQTT ingestion and protocol normalization. It is the boundary between MQTT devices and the internal SignalEye telemetry pipeline.
 
 ## Features
 
 | Feature | Description |
 |---|---|
 | Connect to MQTT broker | Establish and maintain an MQTT client connection using configured broker settings. |
-| Subscribe to telemetry topic | Subscribe to `signaleyes/{tenantId}/{siteId}/{deviceId}/telemetry`. |
+| Subscribe to telemetry topic | Subscribe to `signaleye/{tenantId}/{siteId}/{deviceId}/telemetry`. |
 | Receive raw payload | Read payload bytes/text from MQTT messages without losing original content. |
 | Detect payload encoding | Store valid UTF-8 payloads as text and binary/non-UTF-8 payloads as base64. |
 | Validate topic | Require the expected topic structure before forwarding telemetry. |

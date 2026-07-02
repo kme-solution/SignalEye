@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 OUT="$ROOT/_handover"
 STAMP="$(date +%Y%m%d-%H%M%S)"
-NAME="signaleyes-device-gateway-source-$STAMP"
+NAME="signaleye-device-gateway-source-$STAMP"
 
 mkdir -p "$OUT"
 

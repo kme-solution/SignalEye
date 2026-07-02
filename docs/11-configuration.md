@@ -8,9 +8,9 @@ Configuration should be explicit, environment-friendly, and free of secrets. The
 |---|---|---|
 | `Mqtt:Host` | `localhost` | MQTT broker host. |
 | `Mqtt:Port` | `1883` | MQTT broker port. |
-| `Mqtt:ClientId` | `signaleyes-mqtt-protocol-service` | MQTT client identifier. |
-| `Mqtt:TelemetryTopic` | `signaleyes/+/+/+/telemetry` | Subscription filter for telemetry topics. |
-| `Mqtt:Username` | `signaleyes-edge` | Optional MQTT username. |
+| `Mqtt:ClientId` | `signaleye-mqtt-protocol-service` | MQTT client identifier. |
+| `Mqtt:TelemetryTopic` | `signaleye/+/+/+/telemetry` | Subscription filter for telemetry topics. |
+| `Mqtt:Username` | `signaleye-edge` | Optional MQTT username. |
 | `Mqtt:Password` | omitted | Optional MQTT password; do not commit real values. |
 | `Mqtt:TlsEnabled` | `false` | Enables TLS for broker connection when supported. |
 | `Mqtt:QoS` | `1` | Requested MQTT subscription QoS. |
@@ -25,8 +25,8 @@ Configuration should be explicit, environment-friendly, and free of secrets. The
 | `RabbitMq:Port` | `5672` | RabbitMQ port. |
 | `RabbitMq:Username` | `guest` | Optional RabbitMQ username. |
 | `RabbitMq:Password` | omitted | Optional RabbitMQ password; do not commit real values. |
-| `RabbitMq:RawMqttExchange` | `signaleyes.raw-mqtt` | Exchange used for raw MQTT messages. |
-| `RabbitMq:RawMqttQueue` | `signaleyes.raw-mqtt.device-gateway` | Queue consumed by `device-gateway-service`. |
+| `RabbitMq:RawMqttExchange` | `signaleye.raw-mqtt` | Exchange used for raw MQTT messages. |
+| `RabbitMq:RawMqttQueue` | `signaleye.raw-mqtt.device-gateway` | Queue consumed by `device-gateway-service`. |
 | `RabbitMq:RoutingKey` | `raw-mqtt` | Routing key bound between exchange and queue. |
 
 Use RabbitMQ behind the internal message transport abstraction for service-to-service raw-message delivery.
@@ -54,9 +54,9 @@ Use RabbitMQ behind the internal message transport abstraction for service-to-se
   "Mqtt": {
     "Host": "localhost",
     "Port": 1883,
-    "ClientId": "signaleyes-mqtt-protocol-service",
-    "TelemetryTopic": "signaleyes/+/+/+/telemetry",
-    "Username": "signaleyes-edge",
+    "ClientId": "signaleye-mqtt-protocol-service",
+    "TelemetryTopic": "signaleye/+/+/+/telemetry",
+    "Username": "signaleye-edge",
     "Password": "",
     "TlsEnabled": false,
     "QoS": 1,
@@ -70,8 +70,8 @@ Use RabbitMQ behind the internal message transport abstraction for service-to-se
     "Port": 5672,
     "Username": "",
     "Password": "",
-    "RawMqttExchange": "signaleyes.raw-mqtt",
-    "RawMqttQueue": "signaleyes.raw-mqtt.device-gateway",
+    "RawMqttExchange": "signaleye.raw-mqtt",
+    "RawMqttQueue": "signaleye.raw-mqtt.device-gateway",
     "RoutingKey": "raw-mqtt"
   },
   "TelemetryLogging": {

@@ -1,6 +1,6 @@
 # Service Boundaries
 
-SignalEyes keeps protocol ingestion and gateway processing separate so each service has a narrow responsibility.
+SignalEye keeps protocol ingestion and gateway processing separate so each service has a narrow responsibility.
 
 ## Service Responsibilities
 
@@ -13,10 +13,10 @@ SignalEyes keeps protocol ingestion and gateway processing separate so each serv
 
 | Component | Purpose |
 |---|---|
-| `SignalEyes.Contracts` | Shared DTOs and message contracts. |
-| `SignalEyes.Telemetry` | Telemetry normalization and validation helpers. |
-| `SignalEyes.Modbus` | Isolated M2000 input-register mapping and parsing. |
-| `SignalEyes.Infrastructure` | Shared logging, messaging, and hosting helpers. |
+| `SignalEye.Contracts` | Shared DTOs and message contracts. |
+| `SignalEye.Telemetry` | Telemetry normalization and validation helpers. |
+| `SignalEye.Modbus` | Isolated M2000 input-register mapping and parsing. |
+| `SignalEye.Infrastructure` | Shared logging, messaging, and hosting helpers. |
 
 ## Non-Responsibilities
 

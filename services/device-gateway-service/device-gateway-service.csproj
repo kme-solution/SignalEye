@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk.Worker">
   <ItemGroup>
-    <ProjectReference Include="..\..\src\SignalEyes.Contracts\SignalEyes.Contracts.csproj" />
-    <ProjectReference Include="..\..\src\SignalEyes.Infrastructure\SignalEyes.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\src\SignalEyes.Modbus\SignalEyes.Modbus.csproj" />
-    <ProjectReference Include="..\..\src\SignalEyes.Telemetry\SignalEyes.Telemetry.csproj" />
+    <ProjectReference Include="..\..\src\SignalEye.Contracts\SignalEye.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\SignalEye.Infrastructure\SignalEye.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\SignalEye.Modbus\SignalEye.Modbus.csproj" />
+    <ProjectReference Include="..\..\src\SignalEye.Telemetry\SignalEye.Telemetry.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />

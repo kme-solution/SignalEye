@@ -2,8 +2,8 @@ using Microsoft.Extensions.Options;
 using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Protocol;
-using SignalEyes.Infrastructure;
-using SignalEyes.Telemetry;
+using SignalEye.Infrastructure;
+using SignalEye.Telemetry;
 
 public sealed class MqttProtocolWorker : BackgroundService
 {

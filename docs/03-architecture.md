@@ -1,6 +1,6 @@
 # Architecture
 
-The current SignalEyes architecture is a one-way telemetry ingestion pipeline.
+The current SignalEye architecture is a one-way telemetry ingestion pipeline.
 
 ```mermaid
 flowchart LR

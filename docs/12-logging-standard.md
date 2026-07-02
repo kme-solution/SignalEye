@@ -1,6 +1,6 @@
 # Logging Standard
 
-SignalEyes uses JSON-lines logs for telemetry traceability and operational review. Each line is one complete JSON object.
+SignalEye uses JSON-lines logs for telemetry traceability and operational review. Each line is one complete JSON object.
 
 ## Log Folders
 
@@ -33,7 +33,7 @@ logs/
 MQTT telemetry:
 
 ```json
-{"timestamp":"2026-07-02T00:00:00Z","service":"mqtt-protocol-service","eventType":"mqtt.telemetry.received","tenantId":"acme","siteId":"site-a","deviceId":"m2000-001","topic":"signaleyes/acme/site-a/m2000-001/telemetry","payloadType":"m2000-input-registers","rawPayload":"{\"m\":{\"node08\":541}}"}
+{"timestamp":"2026-07-02T00:00:00Z","service":"mqtt-protocol-service","eventType":"mqtt.telemetry.received","tenantId":"acme","siteId":"site-a","deviceId":"m2000-001","topic":"signaleye/acme/site-a/m2000-001/telemetry","payloadType":"m2000-input-registers","rawPayload":"{\"m\":{\"node08\":541}}"}
 ```
 
 Gateway received:

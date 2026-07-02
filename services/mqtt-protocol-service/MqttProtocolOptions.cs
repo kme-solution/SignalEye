@@ -4,9 +4,9 @@ public sealed class MqttProtocolOptions
 
     public int Port { get; init; } = 1883;
 
-    public string ClientId { get; init; } = "signaleyes-mqtt-protocol-service";
+    public string ClientId { get; init; } = "signaleye-mqtt-protocol-service";
 
-    public string TelemetryTopic { get; init; } = "signaleyes/+/+/+/telemetry";
+    public string TelemetryTopic { get; init; } = "signaleye/+/+/+/telemetry";
 
     public string? Username { get; init; }
 
