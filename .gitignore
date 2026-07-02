@@ -1,0 +1,48 @@
+# Build output
+bin/
+obj/
+artifacts/
+
+# .NET user/local files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.rsuser
+TestResults/
+coverage/
+coverage.*
+*.coverage
+*.coveragexml
+
+# Logs and runtime data
+logs/
+*.log
+
+# Packaging and handover archives
+_handover/
+*.zip
+*.tar
+*.tar.gz
+
+# IDE/editor files
+.vs/
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment/local secrets
+.env
+.env.*
+!.env.example
+appsettings.Development.json
+appsettings.Local.json
+
+# Docker/local compose overrides
+docker-compose.override.yml
+compose.override.yml

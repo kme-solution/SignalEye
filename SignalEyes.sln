@@ -1,0 +1,22 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mqtt-protocol-service", "services\mqtt-protocol-service\mqtt-protocol-service.csproj", "{A5C4D98E-4F0C-4E55-8E4C-8B104F1E7B21}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "device-gateway-service", "services\device-gateway-service\device-gateway-service.csproj", "{B7D57B35-FF61-45DD-8F8F-4196A5C0D01D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalEyes.Contracts", "src\SignalEyes.Contracts\SignalEyes.Contracts.csproj", "{D830F8E7-11B9-4D71-8BC6-9AE548D57675}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalEyes.Infrastructure", "src\SignalEyes.Infrastructure\SignalEyes.Infrastructure.csproj", "{E744864D-FD3E-421D-9D49-95B3399745E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalEyes.Modbus", "src\SignalEyes.Modbus\SignalEyes.Modbus.csproj", "{B1F5C237-EC32-4906-BA80-521B73EC97E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalEyes.Telemetry", "src\SignalEyes.Telemetry\SignalEyes.Telemetry.csproj", "{BF66430D-C020-4B92-9335-28E46F87FBF4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\SignalEyes.Contracts\SignalEyes.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\SignalEyes.Telemetry\SignalEyes.Telemetry.csproj" />
+  </ItemGroup>
+</Project>

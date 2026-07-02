@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\SignalEyes.Contracts\SignalEyes.Contracts.csproj" />
+  </ItemGroup>
+</Project>
