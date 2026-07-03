@@ -4,14 +4,14 @@ SignalEye uses a one-way telemetry flow from MQTT input to local log files.
 
 ## Success Flow
 
-1. An M2000 device exposes telemetry as Modbus input-register values.
+1. One or more field devices expose telemetry to an M100 gateway.
 2. A PUSR M100 or similar MQTT gateway connects to the MQTTnet server hosted by `mqtt-protocol-service`.
-3. `mqtt-protocol-service` receives a publish on `signaleye/{tenantId}/{siteId}/{deviceId}/telemetry`.
-4. `mqtt-protocol-service` validates the topic and extracts `tenantId`, `siteId`, and `deviceId`.
+3. `mqtt-protocol-service` receives a publish on `signaleye/{tenantId}/{siteId}/{gatewayId}/telemetry`.
+4. `mqtt-protocol-service` validates the topic and extracts `tenantId`, `siteId`, and the M100 `gatewayId`.
 5. `mqtt-protocol-service` creates a `RawMqttMessage` that preserves the topic, metadata, payload encoding, and raw payload.
 6. `mqtt-protocol-service` forwards the raw message to the Device Gateway Service through the RabbitMQ-backed transport abstraction.
 7. `device-gateway-service` receives and validates the raw message.
-8. `device-gateway-service` decodes JSON telemetry under `m`, looks up mapped nodes in `config/modbus/edge-EN.csv`, and creates a `CanonicalDeviceEvent`.
+8. `device-gateway-service` decodes each connected-device group, reads telemetry under its `m` property, preserves `d`, `p`, `s`, and `fc` as reading context, applies the selected mapping, and creates a `CanonicalDeviceEvent`.
 9. `device-gateway-service` writes received telemetry, processed telemetry, and operational records to JSON-lines log files.
 
 ## Failure Handling Flow

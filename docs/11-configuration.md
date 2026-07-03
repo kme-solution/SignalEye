@@ -30,6 +30,8 @@ Use RabbitMQ behind the internal message transport abstraction for service-to-se
 | Key | Sample value | Description |
 |---|---|---|
 | `TelemetryLogging:Directory` | `logs` | Root directory for JSON-lines telemetry logs. |
+| `TelemetryLogging:MaxDirectorySizeBytes` | `1073741824` | Maximum retained log size per service directory (1 GiB). |
+| `TelemetryLogging:RetentionDays` | `7` | Maximum log age before deletion. |
 | `Service:Name` | `mqtt-protocol-service` | Service name included in operational logs. |
 
 ## Modbus Mapping
@@ -63,7 +65,9 @@ Use RabbitMQ behind the internal message transport abstraction for service-to-se
     "RoutingKey": "raw-mqtt"
   },
   "TelemetryLogging": {
-    "Directory": "logs"
+    "Directory": "logs",
+    "MaxDirectorySizeBytes": 1073741824,
+    "RetentionDays": 7
   },
   "Gateway": {
     "Modbus": {

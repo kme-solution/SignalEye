@@ -1,6 +1,6 @@
 # SignalEye Overview
 
-SignalEye Device Gateway is a telemetry ingestion foundation for field devices that publish data through MQTT gateways. It receives raw MQTT telemetry, stores it as `RawMqttMessage`, normalizes it into `CanonicalDeviceEvent`, applies supported M2000/Modbus input-register mapping, and writes traceable JSON-lines log files.
+SignalEye Device Gateway is a telemetry ingestion foundation for field devices that publish data through MQTT gateways. It receives grouped telemetry from gateways such as the PUSR M100, preserves each connected device's identity and mapping profile, normalizes messages into `CanonicalDeviceEvent` records, and writes traceable JSON-lines log files.
 
 This phase is telemetry ingestion only.
 
@@ -10,7 +10,7 @@ This phase is telemetry ingestion only.
 |---|---|
 | MQTT ingestion | Receive telemetry from MQTT devices such as PUSR M100. |
 | Normalization | Convert `RawMqttMessage` records into `CanonicalDeviceEvent` records. |
-| Gateway processing | Validate raw messages, map supported M2000 input-register telemetry, and preserve unknown metrics safely. |
+| Gateway processing | Validate grouped device payloads, map supported device profiles, and preserve unknown metrics safely. |
 | Logging | Write received, processed, and error records to JSON-lines log files. |
 
 ## Excluded Scope

@@ -27,7 +27,13 @@ public sealed class ModbusValueMapper : IModbusValueMapper
             }
         }
 
-        if (!_mappingProvider.TryGetByNodeName(nodeName, out var mapping))
+        var hasProfile = metadata.TryGetValue("deviceModel", out var profile) &&
+            !string.IsNullOrWhiteSpace(profile);
+        var mappingFound = hasProfile
+            ? _mappingProvider.TryGetByProfileAndNodeName(profile!, nodeName, out var mapping)
+            : _mappingProvider.TryGetByNodeName(nodeName, out mapping);
+
+        if (!mappingFound)
         {
             metadata["mappingStatus"] = "unmapped";
             metadata["nodeName"] = nodeName;

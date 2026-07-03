@@ -44,13 +44,13 @@ Consistent naming keeps service ownership and telemetry routing clear.
 Telemetry topics use this format:
 
 ```text
-signaleye/{tenantId}/{siteId}/{deviceId}/telemetry
+signaleye/{tenantId}/{siteId}/{gatewayId}/telemetry
 ```
 
 Example:
 
 ```text
-signaleye/acme/site-a/m2000-001/telemetry
+signaleye/acme/site-a/m100-001/telemetry
 ```
 
 | Segment | Meaning |
@@ -58,5 +58,5 @@ signaleye/acme/site-a/m2000-001/telemetry
 | `signaleye` | Product topic root. |
 | `{tenantId}` | Tenant or customer identifier. |
 | `{siteId}` | Site or facility identifier. |
-| `{deviceId}` | Device identifier. |
+| `{gatewayId}` | MQTT gateway identifier. |
 | `telemetry` | Message category. |

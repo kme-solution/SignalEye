@@ -5,11 +5,13 @@ namespace SignalEye.Modbus;
 public sealed class CsvModbusMappingProvider : IModbusMappingProvider
 {
     private readonly Lazy<IReadOnlyDictionary<string, ModbusRegisterMapping>> _mappings;
+    private readonly Lazy<IReadOnlyDictionary<string, ModbusRegisterMapping>> _profileMappings;
 
     public CsvModbusMappingProvider(string mappingPath)
     {
         MappingPath = ResolveMappingPath(mappingPath);
         _mappings = new Lazy<IReadOnlyDictionary<string, ModbusRegisterMapping>>(LoadMappings);
+        _profileMappings = new Lazy<IReadOnlyDictionary<string, ModbusRegisterMapping>>(LoadProfileMappings);
     }
 
     public string MappingPath { get; }
@@ -17,7 +19,20 @@ public sealed class CsvModbusMappingProvider : IModbusMappingProvider
     public bool TryGetByNodeName(string nodeName, out ModbusRegisterMapping mapping) =>
         _mappings.Value.TryGetValue(nodeName, out mapping!);
 
-    private IReadOnlyDictionary<string, ModbusRegisterMapping> LoadMappings()
+    public bool TryGetByProfileAndNodeName(
+        string profile,
+        string nodeName,
+        out ModbusRegisterMapping mapping) =>
+        _profileMappings.Value.TryGetValue(ProfileKey(profile, nodeName), out mapping!);
+
+    private IReadOnlyDictionary<string, ModbusRegisterMapping> LoadProfileMappings() =>
+        LoadMappingsBy(row => ProfileKey(GetValue(row, "Device-name"), GetValue(row, "Node-name")));
+
+    private IReadOnlyDictionary<string, ModbusRegisterMapping> LoadMappings() =>
+        LoadMappingsBy(row => GetValue(row, "Node-name"));
+
+    private IReadOnlyDictionary<string, ModbusRegisterMapping> LoadMappingsBy(
+        Func<IReadOnlyDictionary<string, string>, string> keySelector)
     {
         if (!File.Exists(MappingPath))
         {
@@ -57,7 +72,7 @@ public sealed class CsvModbusMappingProvider : IModbusMappingProvider
                 continue;
             }
 
-            mappings[nodeName] = new ModbusRegisterMapping(
+            mappings[keySelector(row)] = new ModbusRegisterMapping(
                 NodeName: nodeName,
                 FunctionCode: functionCode.Value,
                 RegisterAddress: registerAddress.Value,
@@ -69,6 +84,9 @@ public sealed class CsvModbusMappingProvider : IModbusMappingProvider
 
         return mappings;
     }
+
+    private static string ProfileKey(string profile, string nodeName) =>
+        $"{profile.Trim().ToLowerInvariant()}:{nodeName.Trim().ToLowerInvariant()}";
 
     private static Dictionary<string, string> BuildRow(IReadOnlyList<string> headers, IReadOnlyList<string> values)
     {

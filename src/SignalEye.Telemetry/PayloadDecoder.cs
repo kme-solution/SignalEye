@@ -64,15 +64,34 @@ public sealed class PayloadDecoder
             var meta = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             var timestampUtc = _timeProvider.GetUtcNow();
 
+            // Legacy payload: { "m": { ... } }
+            if (document.RootElement.TryGetProperty("m", out var legacyMetrics))
+            {
+                foreach (var property in document.RootElement.EnumerateObject())
+                {
+                    if (!property.NameEquals("m") && IsScalar(property.Value))
+                    {
+                        meta[property.Name] = property.Value.ToString();
+                    }
+                }
+
+                ExtractMetrics(legacyMetrics, readingList, timestampUtc, meta);
+                readings = readingList;
+                metadata = meta;
+                return readingList.Count > 0 || meta.Count > 0;
+            }
+
             foreach (var property in document.RootElement.EnumerateObject())
             {
-                if (property.NameEquals("m"))
+                if (property.Value.ValueKind == JsonValueKind.Object &&
+                    property.Value.TryGetProperty("m", out var deviceMetrics))
                 {
-                    ExtractMetrics(property.Value, readingList, timestampUtc, meta);
+                    var deviceMetadata = ExtractDeviceMetadata(property.Name, property.Value);
+                    ExtractMetrics(deviceMetrics, readingList, timestampUtc, deviceMetadata);
                     continue;
                 }
 
-                if (property.Value.ValueKind is JsonValueKind.String or JsonValueKind.Number or JsonValueKind.True or JsonValueKind.False)
+                if (IsScalar(property.Value))
                 {
                     meta[property.Name] = property.Value.ToString();
                 }
@@ -87,6 +106,38 @@ public sealed class PayloadDecoder
             return false;
         }
     }
+
+    private static IReadOnlyDictionary<string, string> ExtractDeviceMetadata(
+        string deviceKey,
+        JsonElement deviceElement)
+    {
+        var metadata = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["deviceKey"] = deviceKey
+        };
+
+        foreach (var property in deviceElement.EnumerateObject())
+        {
+            if (property.NameEquals("m") || !IsScalar(property.Value))
+            {
+                continue;
+            }
+
+            metadata[property.Name switch
+            {
+                "d" => "deviceModel",
+                "p" => "port",
+                "s" => "slaveAddress",
+                "fc" => "functionCode",
+                _ => property.Name
+            }] = property.Value.ToString();
+        }
+
+        return metadata;
+    }
+
+    private static bool IsScalar(JsonElement element) =>
+        element.ValueKind is JsonValueKind.String or JsonValueKind.Number or JsonValueKind.True or JsonValueKind.False;
 
     private void ExtractMetrics(
         JsonElement metricsElement,

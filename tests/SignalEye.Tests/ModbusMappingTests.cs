@@ -24,6 +24,18 @@ public sealed class ModbusMappingTests
     }
 
     [Fact]
+    public void CsvModbusMappingProvider_looks_up_nodes_by_lowercase_profile()
+    {
+        var provider = new CsvModbusMappingProvider(MappingPath);
+
+        var found = provider.TryGetByProfileAndNodeName("m2000", "node08", out var mapping);
+
+        Assert.True(found);
+        Assert.Equal(8, mapping.RegisterAddress);
+        Assert.False(provider.TryGetByProfileAndNodeName("stc-10000", "node08", out _));
+    }
+
+    [Fact]
     public void ModbusValueMapper_applies_formula_and_metadata()
     {
         var mapper = new ModbusValueMapper(new CsvModbusMappingProvider(MappingPath));

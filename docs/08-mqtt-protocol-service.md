@@ -7,7 +7,7 @@
 | Feature | Description |
 |---|---|
 | Host MQTT broker | Start an MQTTnet server on the configured TCP port and accept device connections. |
-| Receive telemetry publish | Intercept publishes sent to `signaleye/{tenantId}/{siteId}/{deviceId}/telemetry`. |
+| Receive telemetry publish | Intercept publishes sent to `signaleye/{tenantId}/{siteId}/{gatewayId}/telemetry`. |
 | Receive raw payload | Read payload bytes/text from MQTT messages without losing original content. |
 | Detect payload encoding | Store valid UTF-8 payloads as text and binary/non-UTF-8 payloads as base64. |
 | Validate topic | Require the expected topic structure before forwarding telemetry. |

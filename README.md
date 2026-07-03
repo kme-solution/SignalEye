@@ -44,7 +44,8 @@ Excluded:
 ```text
 SignalEye/
   config/
-    modbus/                      Runtime Modbus mapping source files.
+    m100/                        M100 polling mappings and MQTT template.
+    modbus/                      SignalEye runtime enrichment mappings.
   docs/                         Repository documentation foundation.
   services/
     mqtt-protocol-service/       Worker service for MQTT telemetry ingestion.

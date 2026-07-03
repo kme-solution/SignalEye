@@ -23,6 +23,7 @@ services:
       dockerfile: deploy/docker/mqtt-protocol-service.Dockerfile
       network: host
     restart: unless-stopped
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -36,8 +37,12 @@ services:
       RabbitMq__Port: 5672
       RabbitMq__Username: "${RABBITMQ_USERNAME:-signaleye}"
       RabbitMq__Password: "${RABBITMQ_PASSWORD}"
+      TelemetryLogging__MaxDirectorySizeBytes: "${TELEMETRY_LOG_MAX_BYTES:-1073741824}"
+      TelemetryLogging__RetentionDays: "${TELEMETRY_LOG_RETENTION_DAYS:-7}"
     volumes:
-      - telemetry-logs:/var/lib/signaleye/logs
+      - type: bind
+        source: ${TELEMETRY_LOG_PATH:-../../logs}
+        target: /var/lib/signaleye/logs
 
   device-gateway-service:
     build:
@@ -45,6 +50,7 @@ services:
       dockerfile: deploy/docker/device-gateway-service.Dockerfile
       network: host
     restart: unless-stopped
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -53,9 +59,12 @@ services:
       RabbitMq__Port: 5672
       RabbitMq__Username: "${RABBITMQ_USERNAME:-signaleye}"
       RabbitMq__Password: "${RABBITMQ_PASSWORD}"
+      TelemetryLogging__MaxDirectorySizeBytes: "${TELEMETRY_LOG_MAX_BYTES:-1073741824}"
+      TelemetryLogging__RetentionDays: "${TELEMETRY_LOG_RETENTION_DAYS:-7}"
     volumes:
-      - telemetry-logs:/var/lib/signaleye/logs
+      - type: bind
+        source: ${TELEMETRY_LOG_PATH:-../../logs}
+        target: /var/lib/signaleye/logs
 
 volumes:
   rabbitmq-data:
-  telemetry-logs:

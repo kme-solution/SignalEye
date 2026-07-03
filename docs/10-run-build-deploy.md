@@ -29,13 +29,22 @@ dotnet run --project services/device-gateway-service
 
 ## Runtime Configuration Files
 
-The Modbus mapping runtime source is expected at:
+M100 gateway configuration assets are stored at:
+
+```text
+config/m100/mappings/m2000.csv
+config/m100/templates/telemetry.json
+```
+
+See [`config/m100/README.md`](../config/m100/README.md) for deployment roles and template constraints.
+
+The SignalEye server-side Modbus enrichment source is expected at:
 
 ```text
 config/modbus/edge-EN.csv
 ```
 
-The repository includes `edge-EN.csv` as the active node subset. This file should contain only the M2000 nodes SignalEye retrieves.
+The repository includes `edge-EN.csv` as the active node subset enriched with display names, units, and formulas. Do not upload this server-side file to the M100 in place of its polling CSV.
 
 ## Docker Deployment Notes
 
@@ -60,16 +69,24 @@ Publish a local smoke-test message with any MQTT client. For example, if `mosqui
 set -a; . deploy/docker/.env; set +a
 mosquitto_pub -h 127.0.0.1 -p "$MQTT_PORT" \
   -u "$MQTT_USERNAME" -P "$MQTT_PASSWORD" \
-  -t signaleye/demo/site-1/device-1/telemetry \
-  -m '{"m":{"node1":230,"node2":12}}'
+  -t signaleye/demo/site-1/m100-001/telemetry \
+  -m '{"device01":{"p":1,"s":1,"d":"m2000","fc":4,"m":{"node08":541}}}'
 ```
 
-The telemetry log volume is shared by the workers. Inspect it with:
+The host `logs/` directory is bind-mounted into both workers at `/var/lib/signaleye/logs`. Inspect it directly:
+
+```bash
+find logs -maxdepth 2 -type f -print
+```
+
+Or inspect the same directory from a worker container:
 
 ```bash
 docker compose --env-file deploy/docker/.env -f deploy/docker/compose.yaml exec device-gateway-service \
   sh -c 'find /var/lib/signaleye/logs -type f -maxdepth 2 -print'
 ```
+
+Log paths, filenames, live-tail commands, and retention behavior are documented in [12-logging-standard.md](12-logging-standard.md).
 
 Stop the services without deleting persistent data:
 

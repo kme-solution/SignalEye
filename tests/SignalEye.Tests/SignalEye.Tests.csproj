@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\SignalEye.Contracts\SignalEye.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\SignalEye.Infrastructure\SignalEye.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\SignalEye.Modbus\SignalEye.Modbus.csproj" />
     <ProjectReference Include="..\..\src\SignalEye.Telemetry\SignalEye.Telemetry.csproj" />
   </ItemGroup>

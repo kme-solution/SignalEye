@@ -5,7 +5,7 @@ This document defines the telemetry topic, raw/canonical message contracts, and 
 ## MQTT Topic Format
 
 ```text
-signaleye/{tenantId}/{siteId}/{deviceId}/telemetry
+signaleye/{tenantId}/{siteId}/{gatewayId}/telemetry
 ```
 
 | Segment | Required | Description |
@@ -13,7 +13,7 @@ signaleye/{tenantId}/{siteId}/{deviceId}/telemetry
 | `signaleye` | Yes | Fixed product root. |
 | `{tenantId}` | Yes | Tenant or customer identifier. |
 | `{siteId}` | Yes | Site or facility identifier. |
-| `{deviceId}` | Yes | Device identifier. |
+| `{gatewayId}` | Yes | MQTT gateway identifier, for example `m100-001`. |
 | `telemetry` | Yes | Fixed message category for telemetry ingestion. |
 
 Legacy proof-of-concept services used `devices/{deviceId}/telemetry` as the default topic filter. New SignalEye implementation uses only the tenant/site-aware topic above.
@@ -26,7 +26,7 @@ The primary service contract is `RawMqttMessage -> CanonicalDeviceEvent`. The MQ
 |---|---:|---|
 | `tenantId` | Yes | Tenant parsed from the MQTT topic. |
 | `siteId` | Yes | Site parsed from the MQTT topic. |
-| `deviceId` | Yes | Device parsed from the MQTT topic. |
+| `deviceId` | Yes | Gateway identifier parsed from the MQTT topic. Downstream device identity is carried by the payload group key. |
 | `source` | Yes | Source transport, for example `mqtt`. |
 | `receivedAt` | Yes | UTC timestamp when the service received or normalized the message. |
 | `payloadType` | Yes | Payload classification, for example `raw` or `m2000-input-registers`. |
@@ -95,7 +95,7 @@ Default:
 | `Reporting-on-change` | M100 reporting-on-change setting. Current mapping uses `OFF`. |
 | `Variation-range` | Change threshold when reporting-on-change is enabled. |
 | `Mapped-address` | M100 mapped address field. The CSV export may contain this column more than once. |
-| `Formula` | Optional scaling formula. Currently read but not applied. |
+| `Formula` | Optional scaling formula applied by the server-side value mapper. |
 
 ## M100 Polling Configuration
 
@@ -106,7 +106,7 @@ The current PUSR M100 profile reads the M2000 using Modbus TCP and publishes map
 | `Device-name` | `M2000` |
 | `Port-number` | `1` |
 | `Slave-address` | `1` |
-| `Polling-interval` | `100` |
+| `Polling-interval` | `1000` |
 | `Merge-collection` | `OFF` |
 | `Function-code` | `4` |
 | `Response-Timeout` | `2000` |
@@ -201,17 +201,55 @@ node0109 -> register 8
 
 ## Object Metrics
 
-When telemetry uses object form, the decoder looks up each node key in the CSV, attaches reference/register metadata, and exposes the value for downstream processing.
+The M100 payload groups readings by connected-device key. Each group carries a lowercase mapping profile in `d` and its own Modbus context. This lets one M100 template report multiple downstream device models.
 
 ```json
 {
-  "m": {
-    "node08": 541
+  "device01": {
+    "p": 1,
+    "s": 1,
+    "d": "m2000",
+    "fc": 4,
+    "m": {
+      "node08": 541
+    }
+  },
+  "temperature01": {
+    "p": 2,
+    "s": 1,
+    "d": "stc-10000",
+    "fc": 3,
+    "m": {
+      "node00": 25
+    }
   }
 }
 ```
 
-For the example above, the decoder resolves `node08` against the configured mapping file and preserves the raw metric value with its mapping metadata.
+| Field | Meaning |
+|---|---|
+| Top-level key | Stable connected-device key unique within the M100, such as `device01`. |
+| `p` | M100 port or channel. |
+| `s` | Modbus slave address. |
+| `d` | Lowercase server mapping profile, not the gateway ID. |
+| `fc` | Modbus function code. |
+| `m` | Node/value object populated by the M100 template engine. |
+
+The server preserves the group key, profile, port, slave address, and function code in each reading's metadata. During migration it also accepts the legacy top-level `{ "m": { ... } }` payload.
+
+The M100 template must be minified for deployment and remain below its 2,048-byte template limit. Do not add display names, units, formulas, or protocol descriptions to the template; those belong in server-side mapping profiles.
+
+### Current M2000 M100 Template
+
+The deployable template is checked in at [`config/m100/templates/telemetry.json`](../config/m100/templates/telemetry.json). The corresponding M100 polling/import file is [`config/m100/mappings/m2000.csv`](../config/m100/mappings/m2000.csv).
+
+The current single-device M2000 template is 667 UTF-8 bytes and leaves 1,381 bytes available for additional device groups:
+
+```json
+{"device01":{"p":1,"s":1,"d":"m2000","fc":4,"m":{"node00":"node00","node01":"node01","node02":"node02","node03":"node03","node04":"node04","node05":"node05","node06":"node06","node07":"node07","node08":"node08","node09":"node09","node10":"node10","node11":"node11","node12":"node12","node13":"node13","node14":"node14","node15":"node15","node16":"node16","node17":"node17","node18":"node18","node19":"node19","node20":"node20","node21":"node21","node81":"node81","node83":"node83","node85":"node85","node87":"node87","node89":"node89","node91":"node91","node93":"node93","node95":"node95","node97":"node97","node99":"node99","node101":"node101","node102":"node102"}}}
+```
+
+Add another top-level group for another connected device. Its placeholders must reference that device's unique M100 node names; duplicate placeholders would report the same source value.
 
 ## Modbus-Aware Canonical Reading
 
@@ -251,8 +289,9 @@ Add Modbus mapping inside `device-gateway-service` after JSON metric extraction 
 ```text
 Raw MQTT message
   -> PayloadDecoder
-  -> JSON metrics under "m"
-  -> ModbusMappingService lookup by node name
+  -> connected-device groups
+  -> JSON metrics under each group's "m"
+  -> ModbusMappingService lookup by mapping profile and node name
   -> Apply data type, formula, unit, and register metadata
   -> CanonicalDeviceEvent readings
 ```
