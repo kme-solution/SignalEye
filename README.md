@@ -38,6 +38,7 @@ Excluded:
 | [11-configuration.md](docs/11-configuration.md) | Configuration keys and sample values. |
 | [12-logging-standard.md](docs/12-logging-standard.md) | JSON-lines logging standard. |
 | [13-development-guidelines.md](docs/13-development-guidelines.md) | Development rules for this phase. |
+| [M100 and M2000 setup manual](docs/manual/m100-m2000-setup.md) | Illustrated field setup for M2000 Modbus TCP, M100 mapping, MQTT, and verification. |
 
 ## Repository Structure
 

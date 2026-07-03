@@ -43,6 +43,9 @@ Thumbs.db
 appsettings.Development.json
 appsettings.Local.json
 
+# Local commissioning screenshot contains lab MQTT credentials
+docs/manual/images/m100/mqtt-config.png
+
 # Docker/local compose overrides
 docker-compose.override.yml
 compose.override.yml

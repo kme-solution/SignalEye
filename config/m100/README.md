@@ -26,3 +26,5 @@ The template uses one top-level object per connected device. The object key is t
 Always deploy the minified file rather than the formatted documentation example. Add other devices as sibling top-level objects and use unique M100 node placeholders for their metrics.
 
 SignalEye enriches these raw values with display names, units, formulas, and register metadata from `config/modbus/edge-EN.csv`.
+
+For the complete illustrated commissioning procedure, see [`docs/manual/m100-m2000-setup.md`](../../docs/manual/m100-m2000-setup.md).
